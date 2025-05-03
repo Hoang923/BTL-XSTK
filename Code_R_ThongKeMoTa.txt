@@ -1,0 +1,52 @@
+#TIEN XU LY SO LIEU
+
+#Nhap du lieu vao RStudio
+data<-read.csv("missing_data.csv")
+#gan NA cho du lieu trong
+data[data == ""]<- NA
+#kiem tra so luong cac du lieu NA
+library(questionr)
+na_result<-freq.na(data)
+print(na_result)
+#tien hanh them vao cac du lieu trong
+data$nearest_warehouse[is.na(data$nearest_warehouse)]<-sample(c("Thompson","Bakers","Nickolson"), 10, replace=TRUE)
+data$order_price[is.na(data$order_price)]<-round(mean(data$order_price, na.rm=TRUE))
+data$customer_lat[is.na(data$customer_lat)]<-mean(data$customer_lat, na.rm=TRUE)
+data$customer_long[is.na(data$customer_long)]<-mean(data$customer_long, na.rm=TRUE)
+data$order_total[is.na(data$order_total)]<-mean(data$order_total, na.rm=TRUE)
+data$season[is.na(data$season)]<-sample(c("Spring","Summer","Autumn","Winter"), 10, replace=TRUE)
+data$distance_to_nearest_warehouse[is.na(data$distance_to_nearest_warehouse)]<-mean(data$distance_to_nearest_warehouse, na.rm=TRUE)
+data$is_happy_customer[is.na(data$is_happy_customer)]<-sample(c("True","False"), 10, replace=TRUE)
+
+#THONG KE MO TA
+
+#Tong hop du lieu
+summary(df)
+
+#Ve bieu do Histogram
+hist(df$order_price, xlab=("order_price"), main = "Histogram of order_price")
+hist(df$delivery_charges, xlab=("delivery_charges"), main = "Histogram of delivery_charges")
+hist(df$customer_lat, xlab=("customer_lat"), main = "Histogram of customer_lat")
+hist(df$customer_long, xlab=("customer_long"), main = "Histogram of customer_long")
+hist(df$coupon_discount, xlab=("coupon_discount"), main = "Histogram of coupon_discount")
+hist(df$order_total, xlab=("order_total"), main = "Histogram of order_total")
+hist(df$distance_to_nearest_warehouse, xlab=("distance_to_nearest_warehouse"), main = "Histogram of distance_to_nearest_warehouse")
+
+#Ve bieu do Boxplot
+boxplot(df$order_price, main = "Boxplot of order_price”, xlab="order_price", horizontal = TRUE)
+boxplot(df$delivery_charges, main = "Boxplot of delivery_charges”, xlab="delivery_charges", horizontal = TRUE)
+boxplot(df$customer_lat, main = "Boxplot of customer_lat”, xlab="customer_lat", horizontal = TRUE)
+boxplot(df$customer_long, main = "Boxplot of customer_long”, xlab="customer_long", horizontal = TRUE)
+boxplot(df$coupon_discount, main = "Boxplot of coupon_discount”, xlab="coupon_discount", horizontal = TRUE)
+boxplot(df$order_total, main = "Boxplot of order_total”, xlab="order_total", horizontal = TRUE)
+boxplot(df$distance_to_nearest_warehouse, main = "Boxplot of distance_to_nearest_warehouse”, xlab="distance_to_nearest_warehouse", horizontal = TRUE)
+
+#Bieu do tuong quan (Correlation plot)
+
+#Tach rieng kieu du lieu so va logic
+df_num_logical <- df[, sapply(df, function(x) is.numeric(x) || is.logical(x))]
+
+#Ve bieu do tuong quan
+library(corrplot)
+cor_matrix <- cor(df_num_logical, use = "complete.obs")  # exclude NA rows
+corrplot(cor_matrix, method = "circle")
